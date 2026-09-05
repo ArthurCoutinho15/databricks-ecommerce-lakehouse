@@ -1,0 +1,16 @@
+resources:
+  schemas:
+      landing:
+        catalog_name: ${var.catalog}
+        name: landing
+        comment: "Landing schema"
+
+      system:
+        catalog_name: ${var.catalog}
+        name: system
+        comment: "system schema"
+      
+      bronze:
+        catalog_name: ${var.catalog}
+        name: bronze
+        comment: "Bronze schema for raw data"
