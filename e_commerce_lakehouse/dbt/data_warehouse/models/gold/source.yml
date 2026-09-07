@@ -1,0 +1,25 @@
+version: 2
+
+sources:
+  - name: silver
+    description: "Silver layer of the e-commerce lakehouse"
+    tables:
+      - name: geolocation
+        description: "Geolocation data"
+      - name: order_items
+        description: "Order items data"
+      - name: order_payments
+        description: "Order payments data"
+      - name: order_reviews
+        description: "Order reviews data"
+      - name: orders
+        description: "Orders data"
+      - name: product_category_name_translation
+        description: "Product category name translation data"
+      - name: products
+        description: "Products data"
+      - name: sellers
+        description: "Sellers data"
+
+      - name: customers
+        description: "Customers data"
