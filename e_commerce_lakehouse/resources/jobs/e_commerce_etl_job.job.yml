@@ -1,0 +1,120 @@
+resources:
+  jobs:
+    e_commerce_etl_job:
+      name: e_commerce_etl_job
+
+      tasks:
+        - task_key: bronze_customers
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/customers.py
+          environment_key: default
+
+        - task_key: bronze_geolocation
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/geolocation.py
+          environment_key: default
+
+        - task_key: bronze_order_items
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/ordem_items.py
+          environment_key: default
+
+        - task_key: bronze_order_payments
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/order_payments.py
+          environment_key: default
+
+        - task_key: bronze_order_reviews
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/order_reviews.py
+          environment_key: default
+
+        - task_key: bronze_orders
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/orders.py
+          environment_key: default
+
+        - task_key: bronze_product_category_name_translation
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/product_category_name_translation.py
+          environment_key: default
+
+        - task_key: bronze_products
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/products.py
+          environment_key: default
+
+        - task_key: bronze_sellers
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/bronze/sellers.py
+          environment_key: default
+
+        - task_key: silver_customers
+          depends_on:
+            - task_key: bronze_customers
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/customers.py
+          environment_key: default
+
+        - task_key: silver_geolocation
+          depends_on:
+            - task_key: bronze_geolocation
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/geolocation.py
+          environment_key: default
+
+        - task_key: silver_order_items
+          depends_on:
+            - task_key: bronze_order_items
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/order_items.py
+          environment_key: default
+
+        - task_key: silver_order_payments
+          depends_on:
+            - task_key: bronze_order_payments
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/order_payments.py
+          environment_key: default
+
+        - task_key: silver_order_reviews
+          depends_on:
+            - task_key: bronze_order_reviews
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/order_reviews.py
+          environment_key: default
+
+        - task_key: silver_orders
+          depends_on:
+            - task_key: bronze_orders
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/orders.py
+          environment_key: default
+
+        - task_key: silver_product_category_name_translation
+          depends_on:
+            - task_key: bronze_product_category_name_translation
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/product_category_name_translation.py
+          environment_key: default
+
+        - task_key: silver_products
+          depends_on:
+            - task_key: bronze_products
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/products.py
+          environment_key: default
+
+        - task_key: silver_sellers
+          depends_on:
+            - task_key: bronze_sellers
+          spark_python_task:
+            python_file: ${var.source_root}/e_commerce_lakehouse/silver/sellers.py
+          environment_key: default
+
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "5"
+
+      performance_target: PERFORMANCE_OPTIMIZED

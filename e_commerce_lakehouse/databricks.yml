@@ -18,6 +18,8 @@ variables:
     description: e_commerce
   schema:
     description: The schema to use
+  source_root:
+    description: The workspace path containing the deployed source code
 
 targets:
   dev:
@@ -32,6 +34,7 @@ targets:
     variables:
       catalog: e_commerce
       schema: ${workspace.current_user.short_name}
+      source_root: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}/files/src
   prod:
     mode: production
     workspace:
@@ -41,6 +44,7 @@ targets:
     variables:
       catalog: e_commerce
       schema: prod
+      source_root: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}/files/src
     permissions:
       - user_name: arthurtelescoutinho@gmail.com
         level: CAN_MANAGE

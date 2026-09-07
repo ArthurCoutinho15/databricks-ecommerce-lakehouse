@@ -14,3 +14,18 @@ resources:
         catalog_name: ${var.catalog}
         name: bronze
         comment: "Bronze schema for raw data"
+      
+      silver:
+        catalog_name: ${var.catalog}
+        name: silver
+        comment: "Silver schema for cleaned data"
+      
+      gold:
+        catalog_name: ${var.catalog}
+        name: gold
+        comment: "Gold schema for aggregated data"
+      
+      snapshots:
+        catalog_name: ${var.catalog}
+        name: snapshots
+        comment: "Snapshots schema for historical data"
