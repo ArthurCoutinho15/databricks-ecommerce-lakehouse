@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
+sys.path.insert(0, str(Path(sys.argv[0]).resolve().parents[3]))
 
 from pyspark.sql import SparkSession
 

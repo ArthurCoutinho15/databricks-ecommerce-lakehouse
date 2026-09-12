@@ -5,13 +5,13 @@ resources:
     e_commerce_lakehouse_etl:
       name: e_commerce_lakehouse_etl
       catalog: ${var.catalog}
-      schema: ${var.schema}
+      schema: silver
       serverless: true
-      root_path: "../src/e_commerce_lakehouse_etl"
+      root_path: "../../src/e_commerce_lakehouse/silver"
 
       libraries:
         - glob:
-            include: ../src/e_commerce_lakehouse_etl/transformations/**
+            include: ../../src/e_commerce_lakehouse/silver/**
 
       environment:
         dependencies:

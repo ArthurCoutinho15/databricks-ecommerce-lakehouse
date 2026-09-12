@@ -32,12 +32,13 @@ class LandingToBronze:
         if file_format == "csv":
             reader = reader.option("header", "true")
 
-        return reader.load(self.source_path)
+        return reader.load(self.source_path).selectExpr("*", "_metadata")
 
     def write_data(self, dataframe: DataFrame) -> None:
         query = (
             dataframe.writeStream.format("delta")
             .option("checkpointLocation", self.checkpoint_path)
+            .option("mergeSchema", "true")
             .trigger(availableNow=True)
             .toTable(f"{self.catalog}.{self.schema}.{self.table}")
         )
