@@ -1,0 +1,25 @@
+resources:
+  jobs:
+    e_commerce_gold_dbt_job:
+      name: e_commerce_gold_dbt_job
+      tasks:
+        - task_key: dim_customer
+          dbt_task:
+            project_directory: ${workspace.root_path}/files/dbt/data_warehouse
+            commands:
+              - dbt deps
+              - dbt run --select dim_customer
+            schema: ${var.schema}
+            warehouse_id: 0f4b558fa2ef79db
+            catalog: ${var.catalog}
+            source: WORKSPACE
+          environment_key: dbt-default
+      queue:
+        enabled: true
+      environments:
+        - environment_key: dbt-default
+          spec:
+            dependencies:
+              - dbt-databricks>=1.0.0,<2.0.0
+            environment_version: "5"
+      performance_target: PERFORMANCE_OPTIMIZED

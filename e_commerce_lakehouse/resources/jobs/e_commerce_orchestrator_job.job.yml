@@ -1,0 +1,21 @@
+resources:
+  jobs:
+    e_commerce_orchestrator_job:
+      name: e_commerce_orchestrator_job
+      tasks:
+        - task_key: bronze-spark
+          run_job_task:
+            job_id: 931346008850038
+        - task_key: silver-sdp
+          depends_on:
+            - task_key: bronze-spark
+          pipeline_task:
+            pipeline_id: 484fedab-9684-4deb-beb1-07e45a2e2119
+        - task_key: gold-dbt
+          depends_on:
+            - task_key: silver-sdp
+          run_job_task:
+            job_id: 582113401465040
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
