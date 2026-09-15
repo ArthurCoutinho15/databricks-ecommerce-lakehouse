@@ -5,17 +5,17 @@ resources:
       tasks:
         - task_key: bronze-spark
           run_job_task:
-            job_id: 931346008850038
+            job_id: ${resources.jobs.e_commerce_etl_job.id}
         - task_key: silver-sdp
           depends_on:
             - task_key: bronze-spark
           pipeline_task:
-            pipeline_id: 484fedab-9684-4deb-beb1-07e45a2e2119
+            pipeline_id: ${resources.pipelines.e_commerce_lakehouse_etl.id}
         - task_key: gold-dbt
           depends_on:
             - task_key: silver-sdp
           run_job_task:
-            job_id: 582113401465040
+            job_id: ${resources.jobs.e_commerce_gold_dbt_job.id}
       queue:
         enabled: true
       performance_target: PERFORMANCE_OPTIMIZED
