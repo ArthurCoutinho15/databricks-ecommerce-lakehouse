@@ -3,12 +3,13 @@ resources:
     e_commerce_gold_dbt_job:
       name: e_commerce_gold_dbt_job
       tasks:
-        - task_key: dim_customer
+        - task_key: gold
           dbt_task:
             project_directory: ${workspace.root_path}/files/dbt/data_warehouse
             commands:
               - dbt deps
-              - dbt run --select dim_customer
+              - dbt snapshot
+              - dbt run --select gold
             schema: ${var.schema}
             warehouse_id: 0f4b558fa2ef79db
             catalog: ${var.catalog}
