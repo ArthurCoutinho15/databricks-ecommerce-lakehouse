@@ -1,7 +1,5 @@
-from typing import Optional
 
 from pyspark.sql import DataFrame, SparkSession
-from pyspark.sql.types import StructType
 
 
 class BronzeToSilver:
