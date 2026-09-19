@@ -1,5 +1,3 @@
-from databricks.sdk.runtime import spark
-from pyspark.sql import DataFrame
 from e_commerce_lakehouse import taxis
 
 
