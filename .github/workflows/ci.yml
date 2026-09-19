@@ -47,21 +47,21 @@ jobs:
   # Runs the pytest suite against real Databricks Connect (serverless) compute.
   # Consumes workspace compute on every PR - remove this job (or gate it behind a
   # label/manual trigger) if that cost/latency isn't worth it for a learning project.
-  test:
-    name: Tests (Databricks Connect)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # test:
+  #   name: Tests (Databricks Connect)
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v3
-        with:
-          enable-cache: true
+  #     - uses: astral-sh/setup-uv@v3
+  #       with:
+  #         enable-cache: true
 
-      - name: Install dependencies
-        run: uv sync --dev
+  #     - name: Install dependencies
+  #       run: uv sync --dev
 
-      - name: Run pytest
-        env:
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-        run: uv run pytest
+  #     - name: Run pytest
+  #       env:
+  #         DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  #         DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  #       run: uv run pytest
