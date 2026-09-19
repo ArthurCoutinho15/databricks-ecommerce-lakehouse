@@ -30,7 +30,7 @@ class LandingToBronze:
         )
 
         if file_format == "csv":
-            reader = reader.option("header", "true")
+            reader = reader.option("header", "true").option("multiLine", "true").option("escape", '"')
 
         return reader.load(self.source_path).selectExpr("*", "_metadata")
 
