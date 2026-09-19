@@ -41,16 +41,27 @@ deduped as (
 
 ),
 
+geolocation_enrichment as (
+    select 
+        a.*,
+        geo.lat as latitude,
+        geo.lng as longitude
+    from deduped as a 
+    left join {{ ref('int_geolocation') }} as geo on a.zip_code_prefix = geo.zip_code_prefix
+
+),
+
 final as (
 
     select
-        {{ dbt_utils.generate_surrogate_key(['customer_unique_id']) }} as sk_cliente,
+        {{ dbt_utils.generate_surrogate_key(['customer_unique_id']) }} as sk_customer,
         customer_unique_id,
         zip_code_prefix,
         city,
-        state
-
-    from deduped
+        state,
+        latitude,
+        longitude
+    from geolocation_enrichment
 
 )
 
