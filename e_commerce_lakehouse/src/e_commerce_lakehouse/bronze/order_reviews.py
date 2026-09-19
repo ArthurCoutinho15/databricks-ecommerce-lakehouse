@@ -9,8 +9,8 @@ from src.pipelines.landing_to_bronze import LandingToBronze
 
 spark = SparkSession.builder.getOrCreate()
 
+
 class BronzeOrderReviews:
-    
     def run(self):
         l2b = LandingToBronze(
             spark,
@@ -18,10 +18,11 @@ class BronzeOrderReviews:
             checkpoint_path="/Volumes/e_commerce/system/checkpoints/order_reviews",
             catalog="e_commerce",
             schema="bronze",
-            table="order_reviews"
+            table="order_reviews",
         )
-        
+
         l2b.run(file_name="olist_order_reviews_dataset", file_format="csv")
-        
+
+
 if __name__ == "__main__":
     BronzeOrderReviews().run()
