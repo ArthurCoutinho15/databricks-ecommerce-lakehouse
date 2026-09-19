@@ -29,4 +29,14 @@ spark = SparkSession.builder.getOrCreate()
     """
 )
 def orders():
-    return spark.readStream.table("e_commerce.bronze.orders")
+    df = (
+        spark.readStream.table("e_commerce.bronze.orders")
+        .withColumn("order_purchase_timestamp", f.col("order_purchase_timestamp").cast(t.TimestampType()))
+        .withColumn("order_approved_at", f.col("order_approved_at").cast(t.TimestampType()))
+        .withColumn("order_delivered_carrier_date", f.col("order_delivered_carrier_date").cast(t.TimestampType()))
+        .withColumn("order_delivered_customer_date", f.col("order_delivered_customer_date").cast(t.TimestampType()))
+        .withColumn("order_estimated_delivery_date", f.col("order_estimated_delivery_date").cast(t.TimestampType()))
+    )
+    return df
+
+

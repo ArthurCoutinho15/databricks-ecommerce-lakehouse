@@ -1,5 +1,7 @@
 from pyspark import pipelines as dp
 from pyspark.sql import SparkSession
+import pyspark.sql.functions as f
+import pyspark.sql.types as t
 
 spark = SparkSession.builder.getOrCreate()
 
@@ -35,4 +37,14 @@ spark = SparkSession.builder.getOrCreate()
     "product_width_cm IS NULL OR product_width_cm > 0"
 )
 def products():
-    return spark.readStream.table("e_commerce.bronze.products")
+    df = (
+        spark.readStream.table("e_commerce.bronze.products")
+        .withColumn("product_name_lenght", f.col("product_name_lenght").cast(t.IntegerType()))
+        .withColumn("product_description_lenght", f.col("product_description_lenght").cast(t.IntegerType()))
+        .withColumn("product_photos_qty", f.col("product_photos_qty").cast(t.IntegerType()))
+        .withColumn("product_weight_g", f.col("product_weight_g").cast(t.DoubleType()))
+        .withColumn("product_length_cm", f.col("product_length_cm").cast(t.DoubleType()))
+        .withColumn("product_height_cm", f.col("product_height_cm").cast(t.DoubleType()))
+        .withColumn("product_width_cm", f.col("product_width_cm").cast(t.DoubleType()))
+    )
+    return df
