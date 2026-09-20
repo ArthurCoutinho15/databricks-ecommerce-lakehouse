@@ -19,6 +19,10 @@ class LandingToBronze:
         self.table = table
 
     def read_data(self, file_name: str, file_format: str) -> DataFrame:
+        """
+        Auto Loader read from the landing volume.
+        """
+
         reader = (
             self.spark.readStream.format("cloudFiles")
             .option("cloudFiles.format", f"{file_format}")
@@ -35,6 +39,10 @@ class LandingToBronze:
         return reader.load(self.source_path).selectExpr("*", "_metadata")
 
     def write_data(self, dataframe: DataFrame) -> None:
+        """
+        Delta writing
+        """
+
         query = (
             dataframe.writeStream.format("delta")
             .option("checkpointLocation", self.checkpoint_path)
@@ -46,5 +54,9 @@ class LandingToBronze:
         query.awaitTermination()
 
     def run(self, file_name: str, file_format: str) -> None:
+        """
+        Read then write: landing -> bronze for a single table.
+        """
+
         df = self.read_data(file_name, file_format)
         self.write_data(df)
