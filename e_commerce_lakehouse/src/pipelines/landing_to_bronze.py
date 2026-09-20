@@ -42,7 +42,7 @@ class LandingToBronze:
         """
         Delta writing
         """
-        
+
         query = (
             dataframe.writeStream.format("delta")
             .option("checkpointLocation", self.checkpoint_path)
