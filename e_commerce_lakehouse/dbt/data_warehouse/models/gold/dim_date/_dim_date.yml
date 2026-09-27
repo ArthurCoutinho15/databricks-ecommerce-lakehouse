@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: >
+      Calendar dimension. One row per day, generated via dbt_utils.date_spine
+      (2016-01-01 to 2019-12-31) - not read from any source, since a calendar
+      is always generated. date_day is used directly as the key fact tables
+      join to (no hashed surrogate key needed for a date).
+    columns:
+      - name: date_day
+        description: "Calendar date. Join target for fact tables (sk_date)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: year
+        description: "Calendar year, e.g. 2018."
+        data_tests:
+          - not_null
+
+      - name: quarter
+        description: "Calendar quarter (1-4)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4]
+
+      - name: month
+        description: "Calendar month (1-12)."
+        data_tests:
+          - not_null
+
+      - name: month_name
+        description: "Full month name (e.g. 'January')."
+
+      - name: day_of_month
+        description: "Day of the month (1-31)."
+
+      - name: day_of_week
+        description: "Day of week per Spark's dayofweek() - 1=Sunday ... 7=Saturday."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7]
+
+      - name: day_name
+        description: "Full weekday name (e.g. 'Monday')."
+
+      - name: week_of_year
+        description: "ISO-ish week number of the year, per Spark's weekofyear()."
+
+      - name: is_weekend
+        description: "True when day_of_week is Sunday (1) or Saturday (7)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]

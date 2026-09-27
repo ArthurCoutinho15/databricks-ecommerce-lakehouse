@@ -1,0 +1,64 @@
+version: 2
+
+models:
+  - name: dim_seller
+    description: >
+      Seller dimension. One row per seller_id (SCD1). Enriched with
+      latitude/longitude aggregated from int_geolocation.
+    columns:
+      - name: sk_seller
+        description: "Surrogate key. Join target for fct_order_items."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: seller_id
+        description: "Natural key from silver.sellers."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: seller_zip_code_prefix
+        description: "First 5 digits of the seller's zip code."
+
+      - name: seller_city
+        description: "Seller city, as recorded in silver.sellers."
+
+      - name: seller_state
+        description: "Seller state (Brazilian UF)."
+        data_tests:
+          - accepted_values:
+              values:
+                - AC
+                - AL
+                - AP
+                - AM
+                - BA
+                - CE
+                - DF
+                - ES
+                - GO
+                - MA
+                - MT
+                - MS
+                - MG
+                - PA
+                - PB
+                - PR
+                - PE
+                - PI
+                - RJ
+                - RN
+                - RS
+                - RO
+                - RR
+                - SC
+                - SP
+                - SE
+                - TO
+
+      - name: latitude
+        description: "Average latitude for seller_zip_code_prefix, from int_geolocation. Null when the zip prefix has no match in geolocation."
+
+      - name: longitude
+        description: "Average longitude for seller_zip_code_prefix, from int_geolocation. Null when the zip prefix has no match in geolocation."

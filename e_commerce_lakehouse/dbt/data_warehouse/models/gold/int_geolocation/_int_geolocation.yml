@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: int_geolocation
+    description: >
+      Intermediate model. Aggregates silver.geolocation (many rows per
+      zip_code_prefix) down to one row per zip_code_prefix, using avg() for
+      lat/lng and mode() for city/state. Exists only to enrich dim_customer
+      and dim_seller with coordinates - not joined directly by any fact table.
+    columns:
+      - name: zip_code_prefix
+        description: "First 5 digits of a Brazilian zip code. Grain of this model."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: lat
+        description: "Average latitude across all geocoded addresses sharing this zip_code_prefix."
+
+      - name: lng
+        description: "Average longitude across all geocoded addresses sharing this zip_code_prefix."
+
+      - name: city
+        description: "Most frequent city value recorded for this zip_code_prefix."
+
+      - name: state
+        description: "Most frequent state (Brazilian UF) recorded for this zip_code_prefix."

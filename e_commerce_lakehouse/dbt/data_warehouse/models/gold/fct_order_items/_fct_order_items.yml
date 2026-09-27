@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: fct_order_items
+    description: >
+      Transaction fact. Grain: one row per order line item (order_id,
+      order_item_id). price and freight_value are additive - safe to SUM
+      across any combination of dimensions.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - order_item_id
+    columns:
+      - name: order_id
+        description: "Degenerate dimension. Natural key of the order this line item belongs to."
+        data_tests:
+          - not_null
+
+      - name: order_item_id
+        description: "Degenerate dimension. Sequential line number within the order."
+        data_tests:
+          - not_null
+
+      - name: order_status
+        description: "Degenerate dimension. Order status at the time this table was last built (not point-in-time)."
+        data_tests:
+          - accepted_values:
+              values:
+                - delivered
+                - shipped
+                - canceled
+                - unavailable
+                - invoiced
+                - processing
+                - created
+                - approved
+
+      - name: sk_customer
+        description: "FK to dim_customer."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: sk_customer
+
+      - name: sk_product
+        description: "FK to dim_product."
+        data_tests:
+          - relationships:
+              to: ref('dim_product')
+              field: sk_product
+
+      - name: sk_seller
+        description: "FK to dim_seller."
+        data_tests:
+          - relationships:
+              to: ref('dim_seller')
+              field: sk_seller
+
+      - name: sk_date
+        description: "FK to dim_date, resolved from order_purchase_timestamp (truncated to day)."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: price
+        description: "Additive measure. Item price, in BRL."
+        data_tests:
+          - not_null
+
+      - name: freight_value
+        description: "Additive measure. Freight cost allocated to this item, in BRL."

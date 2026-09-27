@@ -1,0 +1,48 @@
+version: 2
+
+models:
+  - name: fct_order_reviews
+    description: >
+      Transaction fact. Grain: one row per review (review_id). review_score
+      is semi-additive at best (makes sense to AVG, not really to SUM) -
+      treat it as a rating, not a revenue-style measure.
+    columns:
+      - name: review_id
+        description: "Natural key of the review. Grain of this table."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: order_id
+        description: "Degenerate dimension. The order this review is about."
+        data_tests:
+          - not_null
+
+      - name: sk_customer
+        description: "FK to dim_customer."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: sk_customer
+
+      - name: sk_date
+        description: "FK to dim_date, resolved from review_creation_date."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: review_score
+        description: "Rating given by the customer, 1 (worst) to 5 (best)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5]
+
+      - name: review_comment_message
+        description: "Free-text comment left by the customer. No dedicated dimension - kept as a descriptive attribute since it doesn't fit any finite category."
+
+      - name: review_creation_date
+        description: "Timestamp the review was created. Source of sk_date (truncated to day)."
