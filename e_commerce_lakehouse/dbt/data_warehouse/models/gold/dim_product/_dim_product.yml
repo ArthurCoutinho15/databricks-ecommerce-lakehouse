@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: >
+      Product dimension. One row per product_id (SCD1 - no history needed,
+      products don't change identity over time in this dataset). Enriched
+      with the English translation of the product category.
+    columns:
+      - name: sk_product
+        description: "Surrogate key. Join target for fct_order_items."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: product_id
+        description: "Natural key from silver.products."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: category_name
+        description: "Product category name in Portuguese, as recorded in the source. Null when the source product has no category."
+
+      - name: english_category_name
+        description: >
+          English translation of category_name, from
+          silver.product_category_name_translation. Null when category_name
+          is null, or when no translation exists for that category.
+
+      - name: product_weight_g
+        description: "Product weight in grams. Null when not recorded; always > 0 when present (enforced in silver)."
+
+      - name: product_length_cm
+        description: "Product length in centimeters. Null when not recorded; always > 0 when present (enforced in silver)."
+
+      - name: product_height_cm
+        description: "Product height in centimeters. Null when not recorded; always > 0 when present (enforced in silver)."
+
+      - name: product_width_cm
+        description: "Product width in centimeters. Null when not recorded; always > 0 when present (enforced in silver)."

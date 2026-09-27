@@ -43,7 +43,7 @@ final as (
         r.review_creation_date
     from resolved as r
     left join {{ ref('dim_customer') }} as dc on r.customer_unique_id = dc.customer_unique_id
-    left join {{ ref('dim_date') }} as dd on cast(r.review_creation_date as date) = dd.date_day
+    left join {{ ref('dim_date') }} as dd on try_cast(r.review_creation_date as date) = dd.date_day
 )
 
 select *

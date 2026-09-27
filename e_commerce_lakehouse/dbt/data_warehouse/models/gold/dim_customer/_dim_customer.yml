@@ -1,0 +1,66 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: >
+      Customer dimension. One row per customer_unique_id (SCD1 - overwritten on
+      every run with the customer's current zip_code_prefix/city/state, taken
+      from the most recent order). Enriched with latitude/longitude aggregated
+      from int_geolocation.
+    columns:
+      - name: sk_customer
+        description: "Surrogate key. Join target for fact tables (fct_order_items, fct_order_payments, fct_order_reviews)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: customer_unique_id
+        description: "Natural key from silver.customers. Identifies the same person across multiple orders/customer_id values."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: zip_code_prefix
+        description: "First 5 digits of the customer's zip code, from their most recent order."
+
+      - name: city
+        description: "Customer city, from their most recent order."
+
+      - name: state
+        description: "Customer state (Brazilian UF), from their most recent order."
+        data_tests:
+          - accepted_values:
+              values:
+                - AC
+                - AL
+                - AP
+                - AM
+                - BA
+                - CE
+                - DF
+                - ES
+                - GO
+                - MA
+                - MT
+                - MS
+                - MG
+                - PA
+                - PB
+                - PR
+                - PE
+                - PI
+                - RJ
+                - RN
+                - RS
+                - RO
+                - RR
+                - SC
+                - SP
+                - SE
+                - TO
+
+      - name: latitude
+        description: "Average latitude for zip_code_prefix, from int_geolocation. Null when the zip prefix has no match in geolocation."
+
+      - name: longitude
+        description: "Average longitude for zip_code_prefix, from int_geolocation. Null when the zip prefix has no match in geolocation."

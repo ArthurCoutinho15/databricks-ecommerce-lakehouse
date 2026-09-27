@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: fct_order_payments
+    description: >
+      Transaction fact. Grain: one row per payment on an order (order_id,
+      payment_sequential) - an order can have more than one payment.
+      payment_value is additive; payment_installments is not a measure to
+      SUM (it's descriptive, kept here as a degenerate attribute since it has
+      no natural dimension of its own).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - order_id
+            - payment_sequential
+    columns:
+      - name: order_id
+        description: "Degenerate dimension. Natural key of the order this payment belongs to."
+        data_tests:
+          - not_null
+
+      - name: payment_sequential
+        description: "Degenerate dimension. Sequence number of this payment within the order."
+        data_tests:
+          - not_null
+
+      - name: payment_type
+        description: "Degenerate dimension. How the payment was made."
+        data_tests:
+          - accepted_values:
+              values:
+                - credit_card
+                - boleto
+                - voucher
+                - debit_card
+                - not_defined
+
+      - name: sk_customer
+        description: "FK to dim_customer."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: sk_customer
+
+      - name: sk_date
+        description: "FK to dim_date, resolved from the order's order_purchase_timestamp (truncated to day) - payments have no timestamp of their own in the source data."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_day
+
+      - name: payment_value
+        description: "Additive measure. Amount paid, in BRL."
+        data_tests:
+          - not_null
+
+      - name: payment_installments
+        description: "Number of installments for this payment. Not a summable measure."
